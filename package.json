@@ -1,0 +1,26 @@
+{
+  "name": "DogeChat-Bot",
+  "version": "0.1.0",
+  "description": "This module can be used to make a chat bot for the website DogeChat using Node.JS and it simplifies the process a great deal.",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cainy393/dogechat-bot"
+  },
+  "keywords": [
+    "socket.io-client",
+    "chat",
+    "bot",
+    "dogecoin",
+    "dogechat"
+  ],
+  "dependencies": {
+	"socket.io-client": "0.9.16"
+  },
+  "author": "cainy393",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/cainy393/dogechat-bot/issues"
+  },
+  "homepage": "https://github.com/cainy393/dogechat-bot"
+}

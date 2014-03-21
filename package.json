@@ -1,5 +1,5 @@
 {
-  "name": "DogeChat-Bot",
+  "name": "dogechat-bot",
   "version": "0.1.0",
   "description": "This module can be used to make a chat bot for the website DogeChat using Node.JS and it simplifies the process a great deal.",
   "main": "index.js",

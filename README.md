@@ -1,6 +1,6 @@
 DogeChat-Bot Module
 ===================
-This module can be used to make a chat bot for the website [DogeChat](http://dogechat.net/) using Node.JS and it simplifies the process a great deal. Please not the following when making a bot for DogeChat:
+This module can be used to make a chat bot for the website [DogeChat](http://dogechat.net/) using Node.JS and it simplifies the process a great deal. Please note the following when making a bot for DogeChat:
 
   * A bot account must have a username ending in bot.
   * Bot accounts must be registered as bots - contact a moderator on DogeChat to arrange this.
@@ -58,15 +58,15 @@ This will tip `user` the specified `amount` of dogecoins in the room `room` with
 ### bot.onTip(fn:Function(data))
 This specifies a function to be called when the bot receives a tip. The data object contains the following information:
 
+    bot.onTip(function(data) {
+		// Handle what to do when you receive a tip.
+    });
+
   * `user` - The user who tipped you
   * `amount` - How many dogecoins they tipped you
   * `message` - The message they specified (if any)
   * `room` - The room the user tipped you in
   * `timestamp` - An ISO-8601 formatted datetime string of when the message was sent
-
-    bot.onTip(function(data) {
-		// Handle what to do when you receive a tip.
-	});
 
 ### bot.joinRoom(room:String)
 This will send a request for your bot to join `room`.
@@ -90,6 +90,8 @@ This will set the color your bot messages with. Obviously you must have bought t
 
 ### bot.setBadge(badge:String)
 This will set the badge your bot messages with. Obviously you must have bought this badge on the bots account otherwise the badge will default to none.
+
+    bot.setBadge("cake");
 
 ### bot.setLogLevel(logLevel:Integer)
 This sets how detailed the logging will be made by the module. This will default to `1` if not set.

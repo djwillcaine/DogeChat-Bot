@@ -3,7 +3,7 @@
 
 var io = require('socket.io-client');
 var socket;
-var logLevel = 2;
+var logLevel = 1;
 var logs = "";
 
 var botUsername = "";
@@ -77,7 +77,7 @@ exports.connect = function(user, pass, callback) {
 				message = message.join("").split(")");
 				message.pop();
 				message = message.join("");
-				log("chat", "Received " + amt + " doge from " + data.username + " (" + message + ")");
+				log("chat", "Received " + amt + " doge from " + data.user + (message ? " (" + message + ")" : ""));
 				onTip({
 					"user": data.user,
 					"amount": amt,
@@ -105,7 +105,7 @@ exports.chat = function(message, room) {
 }
 
 exports.onTip = function(tipFunc) {
-	var onTip = tipFunc;
+	onTip = tipFunc;
 	log("dbug", "Attached function to tip event.");
 }
 

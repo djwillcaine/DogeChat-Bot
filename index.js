@@ -126,8 +126,16 @@ exports.quitRoom = function(room) {
 
 exports.tip = function(user, amount, room, message) {
 	message = message ? message : "";
-	socket.emit('tip', {user: user, room: room, message: message, tip: amount});
-	log("dbug", "Tipping " + user + " " + amount + " doge " + " in #" + room + " (" + message + ")");
+	if (amount == Math.round(amount)) {
+		if (amount >= 5) {
+			socket.emit('tip', {user: user, room: room, message: message, tip: amount});
+			log("dbug", "Tipping " + user + " " + amount + " doge " + " in #" + room + " (" + message + ")");
+		} else {
+			log("warn", "Cannot tip an amount lower than 5 doge.");
+		}
+	} else {
+		log("warn", "Cannot tip a non-integer amount.")
+	}
 }
 
 exports.getBalance = function() {

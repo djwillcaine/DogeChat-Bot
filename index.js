@@ -70,7 +70,7 @@ exports.connect = function(user, pass, callback) {
 					"messageArray": msg.split(" "),
 					"timestamp": data.timestamp
 				})
-			} else if (contains(data.message, ["<span class='label label-success'>has tipped " + botUsername]) && typeof onTip == 'function') {
+			} else if (contains(data.message, ["<span class='label label-success'>has tipped " + botUsername + " "]) && typeof onTip == 'function') {
 				amt = data.message.split("<span class='label label-success'>has tipped ")[1].split(" ")[1];
 				message = data.message.split("(");
 				message.shift();

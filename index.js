@@ -7,7 +7,7 @@ var logLevel = 1;
 var logs = "";
 
 var botUsername = "";
-var loggedIn = true;
+var loggedIn = false;
 var gotColors = false
 var outputBuffer = [];
 var botBalance = 0;

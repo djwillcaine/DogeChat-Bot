@@ -54,7 +54,10 @@ exports.connect = function(user, pass, callback) {
 		}
 	}, 10000);
 	socket.on('chat', function(data) {
-		if (data.user != "!Topic" && data.user != "*System" && loggedIn) {
+              var chatTime = new Date(data.timestamp).getTime() / 1000;
+              var currentTme = new Date().getTime() / 1000;
+              var difference = currentTime - chatTime;
+		if (data.user != "!Topic" && data.user != "*System" && loggedIn && difference < 5) {
 			if (contains(data.message, ["<span style=\"color: #"])) {
 				data.message = data.message.split("\">")[1];
 				data.message = data.message.replace("</span>", "");

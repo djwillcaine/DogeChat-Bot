@@ -100,3 +100,8 @@ This sets how detailed the logging will be made by the module. This will default
   * `1` - Only important information and warnings will be logged
   * `2` - The above as well as debug logs
   * `3` - All of the above as well as any chat messages/tips received
+
+License
+--------
+
+MIT License (c) 2014 Will Caine

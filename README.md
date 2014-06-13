@@ -30,6 +30,13 @@ To start the script make a javascript file containing the following code and run
 API
 ---
 
+### bot.connect(username:String, password:String, fn:Function)
+Connects to DogeChat and logs in using the supplied credentials. Will callback on `fn` once successfully logged in.
+
+    bot.connect("awesomebot", "mypassword", function() {
+	    // Successfully logged in!
+	});
+
 ### bot.addCommand(command:String, fn:Function(data))
 This adds a command to the command registry so that when a user types `command` the function `fn` will be executed.
 
@@ -37,11 +44,12 @@ This adds a command to the command registry so that when a user types `command` 
 		// Handle what to do with the command here.
 	});
 
-`data` contains an object with some information about the message received.
+`data` is an object containing some information about the message received.
 
   * `user` - The user who sent the message
-  * `message` - A neatly formatted version of the message received
-  * `messageArray` - An array containing the message split up by spaces to make handling parameters easier
+  * `message` - A neatly formatted version of the message received with the command omitted
+  * `messageArray` - An array containing the message split up by spaces to make handling parameters easier with the command omitted
+  * `command` - The command that has been executed, for example `!help`
   * `room` - The room in which the message was posted
   * `timestamp` - An ISO-8601 formatted datetime string of when the message was sent
 
@@ -55,15 +63,32 @@ This will tip `user` the specified `amount` of dogecoins in the room `room` with
 
     bot.tip("cainy", 20, "awesomebot", "Thanks for the cool node module!");
 
-### bot.onTip(fn:Function(data))
-This specifies a function to be called when the bot receives a tip. The data object contains the following information:
+### bot.onChat(fn:Function(data))
+This specifies a function to be called when the bot receives a chat message that is not recognised as a command.
 
     bot.onTip(function(data) {
 		// Handle what to do when you receive a tip.
     });
 
+`data` is an object containing some information about the message received.
+
+  * `user` - The user who sent the message
+  * `message` - A neatly formatted version of the message received
+  * `messageArray` - An array containing the message split up by spaces to make handling parameters easier
+  * `room` - The room in which the message was posted
+  * `timestamp` - An ISO-8601 formatted datetime string of when the message was sent
+
+### bot.onTip(fn:Function(data))
+This specifies a function to be called when the bot receives a tip.
+
+    bot.onTip(function(data) {
+		// Handle what to do when you receive a tip.
+    });
+
+`data` is an object containing some information about the tip received.
+
   * `user` - The user who tipped you
-  * `amount` - How many dogecoins they tipped you
+  * `amount` - How many Dogecoins they tipped you
   * `message` - The message they specified (if any)
   * `room` - The room the user tipped you in
   * `timestamp` - An ISO-8601 formatted datetime string of when the message was sent

@@ -11,9 +11,7 @@ var loggedIn = false;
 var gotColors = false
 var outputBuffer = [];
 var botBalance = 0;
-// var botColors = ["000"];
 var botColor = "000";
-// var botBadges = ["none"];
 var botBadge = "none";
 
 var commands = {};
@@ -54,25 +52,32 @@ exports.connect = function(user, pass, callback) {
 		}
 	}, 10000);
 	socket.on('chat', function(data) {
-              var chatTime = new Date(data.timestamp).getTime() / 1000;
-              var currentTime = new Date().getTime() / 1000;
-              var difference = currentTime - chatTime;
+		var chatTime = new Date(data.timestamp).getTime() / 1000;
+		var currentTime = new Date().getTime() / 1000;
+		var difference = currentTime - chatTime;
 		if (data.user != "!Topic" && data.user != "*System" && loggedIn && difference < 5) {
 			if (contains(data.message, ["<span style=\"color: #"])) {
 				data.message = data.message.split("\">")[1];
 				data.message = data.message.replace("</span>", "");
 			}
 			msg = data.message.trim().replace(/<[^>]+>/g, "").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&#039;/g, "'");
-			command = msg.split(" ").shift().toLowerCase();
+			msgArray = msg.split(" ");
+			command = msgArray.shift().toLowerCase();
+			msg = msg.split(command)[1].trim();
 			log("chat", "<" + data.user + "> " + msg);
+			chatData = {
+				"user": data.user,
+				"message": msg,
+				"room": data.room,
+				"messageArray": msgArray,
+				"timestamp": data.timestamp
+			}
+			if (typeof onChat === 'function') {
+				onChat(chatData);
+			}
 			if (typeof commands[command] == 'function') {
-				commands[command]({
-					"user": data.user,
-					"message": msg,
-					"room": data.room,
-					"messageArray": msg.split(" "),
-					"timestamp": data.timestamp
-				})
+				chatData.command = command;
+				commands[command](chatData);
 			} else if (contains(data.message, ["<span class='label label-success'>has tipped " + botUsername + " "]) && typeof onTip == 'function') {
 				amt = Number(data.message.split("<span class='label label-success'>has tipped ")[1].split(" ")[1]);
 				message = data.message.split("(");
@@ -105,6 +110,11 @@ exports.connect = function(user, pass, callback) {
 exports.chat = function(message, room) {
 	outputBuffer.push({room: room, message: message});
 	log("dbug", "Adding message to output buffer: [" + room + "] " + message);
+}
+
+exports.onChat = function(chatFunc) {
+	onChat = chatFunc;
+	log("dbug", "Attached function to chat event.");
 }
 
 exports.onTip = function(tipFunc) {

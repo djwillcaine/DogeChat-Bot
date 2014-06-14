@@ -63,7 +63,7 @@ exports.connect = function(user, pass, callback) {
 			msg = data.message.trim().replace(/<[^>]+>/g, "").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&#039;/g, "'");
 			msgArray = msg.split(" ");
 			command = msgArray.shift().toLowerCase();
-			msg = msg.split(command)[1].trim();
+			msg = msgArray.join(" ");
 			log("chat", "<" + data.user + "> " + msg);
 			chatData = {
 				"user": data.user,

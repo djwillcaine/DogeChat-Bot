@@ -37,12 +37,21 @@ exports.connect = function(user, pass, callback) {
 			if (outputBuffer.length > 0) {
 				log("dbug", "Outputting message from Output Buffer");
 				var out = outputBuffer.splice(0, 1)[0];
-				socket.emit("chat", {
-					room: out.room,
-					message: out.message,
-					color: botColor,
-					badge: botBadge
-				});
+				if (out.action == "chat") {
+					socket.emit("chat", {
+						room: out.room,
+						message: out.message,
+						color: botColor,
+						badge: botBadge
+					});
+				} else if (out.action == "tip") {
+					socket.emit("tip", {
+						user: out.user,
+						room: out.room,
+						message: out.message,
+						tip: out.tip
+					});
+				}
 			}
 		}, 600);
 	});
@@ -108,8 +117,22 @@ exports.connect = function(user, pass, callback) {
 }
 
 exports.chat = function(message, room) {
-	outputBuffer.push({room: room, message: message});
+	outputBuffer.push({action: "chat", room: room, message: message});
 	log("dbug", "Adding message to output buffer: [" + room + "] " + message);
+}
+
+exports.tip = function(user, amount, room, message) {
+	message = message ? message : "";
+	if (amount == Math.round(amount)) {
+		if (amount >= 5) {
+			outputBuffer.push({action: "tip", user: user, room: room, message: message, tip: amount});
+			log("dbug", "Tipping " + user + " " + amount + " doge " + " in #" + room + " (" + message + ")");
+		} else {
+			log("warn", "Cannot tip an amount lower than 5 doge.");
+		}
+	} else {
+		log("warn", "Cannot tip a non-integer amount.")
+	}
 }
 
 exports.onChat = function(chatFunc) {
@@ -135,20 +158,6 @@ exports.joinRoom = function(room) {
 exports.quitRoom = function(room) {
 	socket.emit('quitroom', {room: room});
 	log("dbug", "Quitting room: " + room);
-}
-
-exports.tip = function(user, amount, room, message) {
-	message = message ? message : "";
-	if (amount == Math.round(amount)) {
-		if (amount >= 5) {
-			socket.emit('tip', {user: user, room: room, message: message, tip: amount});
-			log("dbug", "Tipping " + user + " " + amount + " doge " + " in #" + room + " (" + message + ")");
-		} else {
-			log("warn", "Cannot tip an amount lower than 5 doge.");
-		}
-	} else {
-		log("warn", "Cannot tip a non-integer amount.")
-	}
 }
 
 exports.getBalance = function() {

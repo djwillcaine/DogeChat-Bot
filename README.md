@@ -6,6 +6,8 @@ This module can be used to make a chat bot for the website [DogeChat](http://dog
   * Bot accounts must be registered as bots - contact a moderator on DogeChat to arrange this.
   * A bot must not make more than 2 sequential unprompted messages.
 
+For more information about DogeChat and the rules, please visit the [Info Page](http://info.dogechat.org/).
+
 Installation
 ------------
 
@@ -54,9 +56,16 @@ This adds a command to the command registry so that when a user types `command` 
   * `timestamp` - An ISO-8601 formatted datetime string of when the message was sent
 
 ### bot.chat(message:String, room:String)
-This will add `message` to an internal buffer to output it and chat the message in `room`.
+This will send a chat message in the room `room` saying `message`.
+Note: Saying a message in a room does not require you to be in it. Just becuase you can send a message to a room does not mean your bot will receive other messages in that room.
 
     bot.chat("Hello, world!", "awesomebot");
+
+### bot.PM(user:String, message:String)
+This will send a private message to `user` saying `message`.
+Note: This will send the message in the PM but your bot will not receive any replies that are sent to it unless you manually join the PM room.
+
+    bot.chat("cainy", "Hey there!");
 
 ### bot.tip(user:String, amount:Integer, room:String[, message:String])
 This will tip `user` the specified `amount` of dogecoins in the room `room` with the optional message: `message`.
@@ -125,6 +134,18 @@ This sets how detailed the logging will be made by the module. This will default
   * `1` - Only important information and warnings will be logged
   * `2` - The above as well as debug logs
   * `3` - All of the above as well as any chat messages/tips received
+
+### bot.logger(fn:Function(level, message))
+This allows you to add your own custom handler for logging messages outputted by the module. These are by default logged to the console but if you want to write them to file or something you can use this method.
+The example code below adds each log to a variable which could be later written to file, for example, in the same format that the module itslef logs them to the console.
+
+    bot.logger(function(level, message, time) {
+	    myLogs += "[" + level + "] " + message + "\n";
+	});
+
+  * `level` contains a string denoting what level of logging this is, it can be any of `DBUG`, `INFO`, `WARN` or `CHAT`
+  * `message` contains the message which was logged
+  * `time` is a JavaScript date object which is the time at which this message was logged
 
 License
 --------

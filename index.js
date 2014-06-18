@@ -1,20 +1,18 @@
-// DogeChat Bot Module 0.1.0 by cainy393
+// DogeChat Bot Module 0.1.8 by cainy393
 // MIT licence
 
-var io = require('socket.io-client');
-var socket;
-var logLevel = 1;
-var logs = "";
-
-var botUsername = "";
-var loggedIn = false;
-var gotColors = false
-var outputBuffer = [];
-var botBalance = 0;
-var botColor = "000";
-var botBadge = "none";
-
-var commands = {};
+var io = require('socket.io-client')
+  , socket
+  , logLevel = 1
+  , logs = ""
+  , botUsername = ""
+  , loggedIn = false
+  , gotColors = false
+  , outputBuffer = []
+  , botBalance = 0
+  , botColor = "000"
+  , botBadge = "none"
+  , commands = {};
 
 exports.connect = function(user, pass, callback) {
 	botUsername = user;
@@ -70,10 +68,10 @@ exports.connect = function(user, pass, callback) {
 				data.message = data.message.replace("</span>", "");
 			}
 			msg = data.message.trim().replace(/<[^>]+>/g, "").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&#039;/g, "'");
+			log("chat", "<" + data.user + "> " + msg);
 			msgArray = msg.split(" ");
 			command = msgArray.shift().toLowerCase();
 			msg = msgArray.join(" ");
-			log("chat", "<" + data.user + "> " + msg);
 			chatData = {
 				"user": data.user,
 				"message": msg,
@@ -117,6 +115,12 @@ exports.connect = function(user, pass, callback) {
 }
 
 exports.chat = function(message, room) {
+	outputBuffer.push({action: "chat", room: room, message: message});
+	log("dbug", "Adding message to output buffer: [" + room + "] " + message);
+}
+
+exports.PM = function(user, message) {
+	var room = [botUsername, user].sort().join(":")
 	outputBuffer.push({action: "chat", room: room, message: message});
 	log("dbug", "Adding message to output buffer: [" + room + "] " + message);
 }
@@ -179,14 +183,20 @@ exports.setLogLevel = function(level) {
 	log("info", "Set log level to " + level);
 }
 
+exports.logger = function(fn) {
+	customLogger = fn;
+}
+
 function log(prefix, msg) {
-	time = new Date().toISOString().replace("T", " ").slice(0, 16);
+	var time = new Date()
+	  , timeStr = time.toISOString().replace("T", " ").slice(0, 16);
 	prefix = prefix.toUpperCase();
 	if (logLevel == 3 || (prefix == "DBUG" && logLevel >= 2) || ((prefix == "INFO" || prefix == "WARN") && logLevel >= 1)) {
-		console.log(time + " [" + prefix + "] " + msg);
+		console.log(timeStr + " [" + prefix + "] " + msg);
+	if (typeof customLogger === 'function') customLogger(prefix, msg, time);
 	}
 	if (prefix != "chat") {
-		logs += time + " [" + prefix + "] " + msg;
+		logs += timeStr + " [" + prefix + "] " + msg;
 	}
 }
 

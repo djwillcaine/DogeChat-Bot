@@ -1,4 +1,4 @@
-// DogeChat Bot Module 0.1.8 by cainy393
+// DogeChat Bot Module 0.1.9 by cainy393
 // MIT licence
 
 var io = require('socket.io-client')

@@ -71,19 +71,20 @@ exports.connect = function(user, pass, callback) {
 			log("chat", "<" + data.user + "> " + msg);
 			msgArray = msg.split(" ");
 			command = msgArray.shift().toLowerCase();
-			msg = msgArray.join(" ");
+			commandMsg = msgArray.join(" ");
 			chatData = {
 				"user": data.user,
-				"message": msg,
 				"room": data.room,
 				"messageArray": msgArray,
 				"timestamp": data.timestamp
 			}
 			if (typeof onChat === 'function') {
+				chatData.message = msg;
 				onChat(chatData);
 			}
 			if (typeof commands[command] == 'function') {
 				chatData.command = command;
+				chatData.message = commandMsg;
 				commands[command](chatData);
 			} else if (contains(data.message, ["<span class='label label-success'>has tipped " + botUsername + " "]) && typeof onTip == 'function') {
 				amt = Number(data.message.split("<span class='label label-success'>has tipped ")[1].split(" ")[1]);
